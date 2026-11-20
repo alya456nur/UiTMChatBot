@@ -85,7 +85,7 @@ git clone https://github.com/alya456nur/UiTMChatBot.git
 Navigate into the project directory:
 
 ```bash
-cd uitm-chatbot
+cd uitmchatbot
 ```
 
 ### 2. Create a Virtual Environment
