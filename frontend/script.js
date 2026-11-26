@@ -29,8 +29,10 @@ function appendMessage(text, sender) {
     chatbox.scrollTop = chatbox.scrollHeight;
 }
 
+
 async function sendMessage() {
     const message = inputMessage.value.trim();
+
     if (!message) return;
 
     appendMessage(message, "user");
@@ -38,25 +40,36 @@ async function sendMessage() {
     sendBtn.disabled = true;
 
     try {
-        // Updated to relative path since backend and frontend are together
         const response = await fetch("/chat", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({ message })
         });
 
-        if (!response.ok) throw new Error("Network response was not ok");
-
         const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Something went wrong.");
+        }
+
         appendMessage(data.reply, "bot");
 
     } catch (err) {
-        appendMessage("Error: Server not reachable", "bot");
+        console.error("Chatbot error:", err);
+
+        appendMessage(
+            "Sorry! An error occurred: " + err.message,
+            "bot"
+        );
+
     } finally {
         sendBtn.disabled = false;
         inputMessage.focus();
     }
 }
+
 
 sendBtn.addEventListener("click", sendMessage);
 
